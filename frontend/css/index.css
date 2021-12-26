@@ -1,0 +1,23 @@
+/* html {
+    height: 100vh;
+} */
+/* Remover os bang padrão */
+body {
+    padding: 0;
+    margin: 0;
+}
+
+
+#area {
+    width: 80%;
+    height: 50vh;
+
+    border: 1px solid red;
+
+    margin-top: 100px;
+    position: relative;
+}
+
+* {
+    transition: all 0.1s;
+}
