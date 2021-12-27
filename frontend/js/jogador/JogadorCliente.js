@@ -1,0 +1,5 @@
+class JogadorCliente {
+
+}
+
+export {JogadorCliente}

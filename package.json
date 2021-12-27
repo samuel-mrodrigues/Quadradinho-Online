@@ -1,0 +1,27 @@
+{
+  "name": "ddtank",
+  "version": "1.0.0",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "iniciar-frontend": "http-server ./frontend -c-1",
+    "iniciar-backend": "nodemon ./backend/index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/samuel-mrodrigues/Quadradinho-Online.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/samuel-mrodrigues/Quadradinho-Online/issues"
+  },
+  "homepage": "https://github.com/samuel-mrodrigues/Quadradinho-Online#readme",
+  "description": "",
+  "dependencies": {
+    "http-server": "^14.0.0",
+    "nodemon": "^2.0.15",
+    "ws": "^8.4.0"
+  }
+}

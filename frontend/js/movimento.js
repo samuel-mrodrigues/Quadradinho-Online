@@ -22,17 +22,22 @@ let jogador;
 // Area onde se encontra os jogadores
 let area;
 
+function iniciar(configs) {
+    configurar(configs)
+    listenerMovimentosLocal()
+}
+
 // Configurar
 function configurar(dados = {
-    areaObjeto,
-    movimentoPixeis,
-    pixelsPorSegundo,
-    jogadorObjeto
+    areaHTML,
+    pixelsPorMovimento,
+    movimentoPorSegundo,
+    jogadorHTML
 }) {
-    totalMovimentoPixels = dados.movimentoPixeis;
-    pixelsPorSegundo = dados.pixelsPorSegundo
-    jogador = dados.jogadorObjeto;
-    area = dados.areaObjeto
+    totalMovimentoPixels = dados.pixelsPorMovimento;
+    pixelsPorSegundo = dados.movimentoPorSegundo
+    jogador = dados.jogadorHTML;
+    area = dados.areaHTML
 
     console.log(`Configurando o movimento com os seguintes dados:`);
     console.log(`Pixels por movimento: ${totalMovimentoPixels}`);
@@ -44,7 +49,7 @@ function configurar(dados = {
 }
 
 // Função para escutar os inputs e mover o jogador
-function listenerMovimentos() {
+function listenerMovimentosLocal() {
     console.log("Iniciando listeners de movimento...");
 
     // Configura a movimentação do usuario
@@ -90,17 +95,23 @@ function listenerMovimentos() {
     }
 }
 
+// Mover o jogador pra uma direção
 function moverJogador(direcao) {
+
+    // Verifica se nao ta fora da area
     estaOutOfBonds()
 
+    // Verifica se ja nao esta se movendo pra essa direção
     if (movimentos[direcao] != 0) {
         return;
     }
 
+    // Bloquear o movimento ou não
     if (habilitarMovimento == false) {
         return;
     }
 
+    // ID que será gerado para uso futuro
     let movimentoId = 0;
 
     switch (direcao) {
@@ -165,6 +176,7 @@ function moverJogador(direcao) {
     }
 }
 
+// Para a task do movimento
 function pararMovimento(direcao) {
     if (movimentos[direcao] != 0) {
         console.log(`Jogador parou de ir pra ${direcao}, parando movimento...`);
@@ -173,6 +185,7 @@ function pararMovimento(direcao) {
     }
 }
 
+// Verificar se o quadrado esta dentro da arena
 function estaOutOfBonds() {
     let arenaAltura = area.offsetHeight
     let arenaLargura = area.offsetWidth
@@ -184,4 +197,4 @@ function estaOutOfBonds() {
     }
 }
 
-export default { configurar, listenerMovimentos }
+export default { iniciar }

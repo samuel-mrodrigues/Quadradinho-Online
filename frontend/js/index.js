@@ -1,16 +1,37 @@
-console.log("Carregando arquivos...");
+log("Carregando...")
+// Parametros do game
+let conexaoWS = "localhost:8082"
 
-// Trata do movimento de jogadores
-import MovimentoManager from "./movimento.js"
+// Imports
+import { Conexao } from "./conexao.js"
+import { Arena } from "./arena.js"
 
-// Referencias globais
-var jogador = document.getElementById("jogador")
-var area = document.getElementById("area")
+// Variaveis
+var conexaoServidor = new Conexao(conexaoWS);
+var arena = new Arena()
 
+// Criar o jogador atual e coloca-lo no gamee   
+async function entrarNoJogo() {
 
-// Configurações iniciais
-// Iniciar o listener pra mover os jogadores
-console.log("-------------");
-MovimentoManager.configurar({ areaObjeto: area, jogadorObjeto: jogador, movimentoPixeis: 30, pixelsPorSegundo: 0 })
-MovimentoManager.listenerMovimentos()
-console.log("-------------");
+    // Conectar-se ao servidor
+    log(`Conectando-se ao servidor ${conexaoWS}`)
+    let conectouSucesso;
+    try {
+        conectouSucesso = await conexaoServidor.conectar()
+        log("Conectado!")
+    } catch (erro) {
+        log(erro);
+        log("Erro ao estabelecer conexão com o servidor, não é possível jogar.")
+    }
+
+    if (conectouSucesso) {
+        arena.criarJogadorLocal()
+    }
+}
+
+entrarNoJogo()
+
+function log(msg) {
+    console.log(`Quadradinho Online: ${msg}`);
+}
+
