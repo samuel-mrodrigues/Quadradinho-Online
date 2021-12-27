@@ -22,7 +22,7 @@ function esconderLogin() {
     loginElemento.style.transition = 'all 1s'
     loginElemento.style.fontSize = '1px'
     loginElemento.style.transition = 'all 3s'
-    
+
     setTimeout(() => {
         loginElemento.style.opacity = '0%'
     }, 1000);
@@ -57,11 +57,11 @@ function ativarEfeitosLoucos(boolean) {
 
 }
 
-
 // Chama a callback de quem usou essa funcao quando clicarem no botao de conectar
 function clicouLogin(funcao) {
     botaoLogin.onclick = () => {
-        funcao()
+        let nomeSelecionado = loginElemento.getElementsByClassName("resposta")[0].value
+        funcao(nomeSelecionado)
     }
 }
 

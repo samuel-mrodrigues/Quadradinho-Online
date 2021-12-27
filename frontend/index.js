@@ -14,10 +14,11 @@ import Notificacao from "./notificacao.js"
 var conexaoServidor = new Conexao(conexaoWS);
 var arenaJogo = new Arena()
 
-// Criar o jogador atual e coloca-lo no gamee   
-async function entrarNoJogo() {
+// Criar o jogador atual e coloca-lo no game
+async function entrarNoJogo(nome) {
+
     // Conectar-se ao servidor
-    log(`Conectando-se ao servidor ${conexaoWS}`)
+    log(`Conectando-se ao servidor ${conexaoWS} como ${nome}`)
     Notificacao.mostrarNotificacao("Iniciando conexão...", "Conectando-se ao servidor, aguarde um momento...")
     Login.travarLogin()
     let conectouSucesso;
@@ -26,21 +27,49 @@ async function entrarNoJogo() {
         log("Conectado!")
         Notificacao.mostrarNotificacao("Conectado", "Boas vindas : D")
     } catch (erro) {
+        // Erro ao não conectar ao WS
         log(erro);
         log("Erro ao estabelecer conexão com o servidor, não é possível jogar.")
         Notificacao.mostrarNotificacao("Servidor indisponível", "Não é possivel conectar-se ao servidor ;(")
         Login.destravarLogin()
     }
 
+    // Se conectou com sucesso
     if (conectouSucesso) {
-        Login.esconderLogin()
+        Notificacao.mostrarNotificacao("Autenticando", "Aguarde um momento...")
 
-        await pausa(3)
-        efeitoInicio()
-        await pausa(3)
-        ativarCoresDeFundo(false)
-        arenaJogo.mostrarArena()
-        arenaJogo.criarJogadorLocal()
+        // Receber a resposta se eu fui autenticado ou não
+        conexaoServidor.addHandler(async (mensagem) => {
+            let msgData = JSON.parse(mensagem.data)
+
+            if (msgData.tipo == "recusa-autenticacao") {
+                Notificacao.mostrarNotificacao("Expulso do servidor", `Motivo: ${msgData.dados.motivo}`)
+                Login.destravarLogin()
+                return;
+            } else if (msgData.tipo == "aceita-autenticacao") {
+                // // Esconde a barra de login
+                Login.esconderLogin()
+                await pausa(3)
+
+                // // Efeitozin inicial
+                efeitoInicio()
+                await pausa(3)
+
+                // // Ativar o pisca-pisca de fundo
+                ativarCoresDeFundo(false)
+
+                // // Mostrar arena
+                arenaJogo.mostrarArena()
+            }
+        })
+
+        // Enviar solicitação pra autenticar
+        conexaoServidor.enviarMsg(JSON.stringify({
+            tipo: "iniciar-autenticacao",
+            dados: {
+                nome: nome
+            }
+        }))
     }
 }
 
@@ -81,7 +110,7 @@ function ativarCoresDeFundo(boolean) {
             clearInterval(taskIdCorDeFundo)
             taskIdCorDeFundo = 0;
         }
-        
+
         document.getElementsByTagName("body")[0].removeAttribute('style')
     }
 }
