@@ -4,17 +4,47 @@
 <head>
     <meta charset='utf-8'>
     <meta http-equiv='X-UA-Compatible' content='IE=edge'>
-    <title>Teste</title>
+    <title>Quadradinho Online</title>
 
     <link rel="stylesheet" href="./css/index.css">
+    <link rel="stylesheet" href="./css/login.css">
+    <link rel="stylesheet" href="./css/notificacao.css">
     <link rel="stylesheet" href="./css/jogador.css">
 </head>
 
 <body>
-    <div id="arena">
+    <div id="notificacao" class="notificacao" style="opacity: 0%;">
+        <p class="titulo">
+            Titulo
+        </p>
+
+        <p class="conteudo">
+            Conteudo
+        </p>
+    </div>
+
+    <div id="login" class="login" style="display: none;opacity: 0%;">
+        <p>Olá, welcome to Quadradinho Online</p>
+        <p>Selecione seu nome abaixo e clique em conectar-se!</p>
+
+        <div class="campos">
+            <div class="campo">
+                <span class="titulo">Digite seu nick: </span>
+                <input class="resposta" type="text" maxlength="13">
+            </div>
+        </div>
+
+        <button class="entrar">Conectar-me!</button>
+    </div>
+
+    <div id="arena" class="arenaa" style="display: none;opacity: 0%;">
 
     </div>
 </body>
 <script src='./index.js' type="module"></script>
+
+<footer>
+    Desenvolvido por Samuel Machado Rodrigues :D 
+</footer>
 
 </html>

@@ -1,0 +1,32 @@
+#login {
+    font-size: 1.5rem;
+    font-weight: bold;
+
+    margin: 0px auto;
+    width: 50%;
+    text-align: center;
+}
+
+#login * {
+    transition: all 1s;
+}
+
+.bloqueado {
+    opacity: 40%;
+}
+
+.login .resposta {
+    font-size: 1.5rem;
+    outline: none;
+}
+
+button.entrar {
+    font-size: 1.5rem;
+    margin-top: 10px;
+
+    border: none;
+    border-radius: 3.5px;
+    background-color: rgb(151, 39, 185);
+    padding: 5px;
+    color: white;
+}

@@ -1,0 +1,44 @@
+.notificacao {
+    z-index: 1;
+    position: absolute;
+
+    top: 0;
+    left: 50%;
+    transform: translate(-50%);
+
+    min-width: 400px;
+    min-height: 100px;
+
+    background-color: rgb(53, 63, 207);
+    border-radius: 4px;
+
+    font-size: 1.5rem;
+
+    transition: all 1s;
+}
+
+.notificacao * {
+    transition: all 1s;
+}
+
+.notificacao p {
+    padding: 0;
+    margin: 0;
+}
+
+.notificacao .titulo {
+    text-align: center;
+    color: white;
+    padding: 3px;
+
+    font-size: 1.8rem;
+    border-bottom: 1px dashed rgba(236, 238, 230, 0.808);
+}
+
+.notificacao .conteudo {
+    text-align: center;
+    color: white;
+    padding: 5px;
+    font-size: 1.5rem;
+    max-width: 400px;
+}
