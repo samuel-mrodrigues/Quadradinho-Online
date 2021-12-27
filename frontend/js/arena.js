@@ -1,5 +1,5 @@
-import { JogadorLocal } from "./jogador/JogadorLocal.js";
-import { JogadorCliente } from "./jogador/JogadorCliente.js";
+import { JogadorLocal } from "./Jogador/JogadorLocal.js";
+import { JogadorCliente } from "./Jogador/JogadorCliente.js";
 
 class Arena {
     // O elemeto da arena
@@ -20,7 +20,11 @@ class Arena {
     }
 
     criarJogadorLocal() {
-        this.jogadorLocal = new JogadorLocal(this.getArena());
+        this.jogadorLocal = new JogadorLocal(this.getArena(), "Teste", { movimentoPorPixels: 50, movimentoPorSegundo: 0.2 });
+    }
+
+    log(msg) {
+        console.log(`Arena: ${msg}`);
     }
 }
 export { Arena }

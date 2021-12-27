@@ -1,10 +1,10 @@
 log("Carregando...")
 // Parametros do game
-let conexaoWS = "localhost:8082"
+let conexaoWS = "localhost:8081"
 
 // Imports
-import { Conexao } from "./conexao.js"
-import { Arena } from "./arena.js"
+import { Conexao } from "./js/conexao.js"
+import { Arena } from "./js/arena.js"
 
 // Variaveis
 var conexaoServidor = new Conexao(conexaoWS);

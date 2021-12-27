@@ -5,6 +5,8 @@ class Jogador {
     constructor(nome, jogadorHTML) {
         this.nome = nome;
         this.jogadorHTML = jogadorHTML
+
+        console.log(`Jogador local: ${nome}`);
     }
 
     getNome() {
@@ -14,6 +16,11 @@ class Jogador {
     getHTML() {
         return this.jogadorHTML;
     }
+
+    log(msg) {
+        console.log(`Jogador ${this.nome}: ${msg}`);
+    }
+
 }
 
 export { Jogador }
