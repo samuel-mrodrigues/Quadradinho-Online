@@ -25,7 +25,7 @@ async function entrarNoJogo(nome) {
     try {
         conectouSucesso = await conexaoServidor.conectar()
         log("Conectado!")
-        Notificacao.mostrarNotificacao("Conectado", "Boas vindas : D")
+        Notificacao.mostrarNotificacao("Conectado", "Iniciando autenticação...")
     } catch (erro) {
         // Erro ao não conectar ao WS
         log(erro);
@@ -36,6 +36,7 @@ async function entrarNoJogo(nome) {
 
     // Se conectou com sucesso
     if (conectouSucesso) {
+        return;
         Notificacao.mostrarNotificacao("Autenticando", "Aguarde um momento...")
 
         // Receber a resposta se eu fui autenticado ou não
@@ -82,7 +83,7 @@ setTimeout(() => {
 
     // Quando o usuario clicar no botao da pagina de conectar, chamar a função de conexão..
     Login.clicouLogin(entrarNoJogo)
-}, 2000);
+}, 1);
 
 
 function log(msg) {
