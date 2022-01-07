@@ -36,7 +36,6 @@ async function entrarNoJogo(nome) {
 
     // Se conectou com sucesso
     if (conectouSucesso) {
-        return;
         Notificacao.mostrarNotificacao("Autenticando", "Aguarde um momento...")
 
         // Receber a resposta se eu fui autenticado ou não
@@ -48,19 +47,34 @@ async function entrarNoJogo(nome) {
                 Login.destravarLogin()
                 return;
             } else if (msgData.tipo == "aceita-autenticacao") {
+                log("Autenticação aprovada, dados:")
+                log(msgData)
+
                 // // Esconde a barra de login
                 Login.esconderLogin()
-                await pausa(3)
+                // await pausa(3)
 
                 // // Efeitozin inicial
                 efeitoInicio()
-                await pausa(3)
+                // await pausa(3)
 
                 // // Ativar o pisca-pisca de fundo
                 ativarCoresDeFundo(false)
 
                 // // Mostrar arena
                 arenaJogo.mostrarArena()
+
+                // Cria o jogador local
+                arenaJogo.criarJogadorLocal(msgData.dados)
+
+                // Receber a lista de outros jogadores
+                conexaoServidor.addHandler(async (mensagem) => {
+                    let msgData = mensagem.data
+                })
+
+                conexaoServidor.enviarMsg(JSON.stringify({
+                    tipo: "solicitar-jogadores"
+                }))
             }
         })
 
@@ -87,7 +101,12 @@ setTimeout(() => {
 
 
 function log(msg) {
-    console.log(`Quadradinho Online: ${msg}`);
+    if (typeof msg == 'string') {
+        console.log(`Quadradinho Online: ${msg}`);
+    } else {
+        console.log("Quadradinho Online:");
+        console.log(msg)
+    }
 }
 
 // Efeitos do inicio do jogo

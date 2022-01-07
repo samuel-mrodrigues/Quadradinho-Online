@@ -1,9 +1,11 @@
 class Jogador {
     nome = "Não definido"
+    id = -1;
     jogadorHTML;
 
-    constructor(nome, jogadorHTML) {
+    constructor(id, nome, jogadorHTML) {
         this.nome = nome;
+        this.id = id;
         this.jogadorHTML = jogadorHTML
 
         console.log(`Jogador local: ${nome}`);

@@ -1,6 +1,8 @@
 import { JogadorLocal } from "./Jogador/JogadorLocal.js";
 import { JogadorCliente } from "./Jogador/JogadorCliente.js";
 
+import {MovimentoLocal} from "./jogador/Movimento/MovimentoLocal.js"
+
 class Arena {
     // O elemeto da arena
     arenaHTML;
@@ -19,8 +21,40 @@ class Arena {
         return this.arenaHTML
     }
 
-    criarJogadorLocal() {
-        this.jogadorLocal = new JogadorLocal(this.getArena(), "Teste", { movimentoPorPixels: 50, movimentoPorSegundo: 0.2 });
+    // Cria os objeto jogador e o insere no html
+    criarJogadorLocal(dados) {
+        console.log("Criando o jogador local com os dados ->");
+        console.log(dados);
+
+        // Dados recebidos do servidor
+        let nome = dados.jogador.nome
+        let id = dados.jogador.id
+
+        let movimentoPorPixels = dados.movimento.movimentoPorPixels
+        let movimentoPorSegundo = dados.movimento.movimentoPorSegundo
+
+        // Elemento HTML do jogador
+        let jogadorElemento = document.createElement('div')
+        jogadorElemento.setAttribute('id', 'jogador')
+
+        // "Escuta" os movimentos do teclado do jogador local
+        let listenerMovimento = new MovimentoLocal({
+            arenaHTML: this.arenaHTML,
+            jogadorHTML: jogadorElemento,
+            movimentoPorPixels: movimentoPorPixels,
+            movimentoPorSegundo: movimentoPorSegundo
+        })
+
+        // Instancio o jogador com os dados
+         this.jogadorLocal = new JogadorLocal({
+             id: id,
+             nome: nome,
+             html: jogadorElemento,
+             movimento: listenerMovimento
+         })
+
+        // Insere no html
+        this.arenaHTML.appendChild(jogadorElemento)
     }
 
     mostrarArena() {
@@ -35,10 +69,6 @@ class Arena {
         setTimeout(() => {
             this.arenaHTML.style.display = 'none';
         }, 2000);
-    }
-
-    log(msg) {
-        console.log(`Arena: ${msg}`);
     }
 }
 export { Arena }

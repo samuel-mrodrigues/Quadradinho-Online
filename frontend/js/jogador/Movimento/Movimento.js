@@ -1,6 +1,6 @@
 class Movimento {
     // Total de pixels por movimento
-    movimentoPorPixels = 5
+    movimentoPorPixels = 5;
 
     // O total de pixels por segundo que o objeto do jogador irá se movimentar
     movimentosPorSegundo = 5;
@@ -15,6 +15,7 @@ class Movimento {
     jogadorHTML;
 
     // As direcoes que estao atualmente ativas
+    // Se cima, direita, etc.. estiver true(1), ele estará se movendo naquela direção, caso contrario false(0)
     movimentos = {
         cima: 0,
         direita: 0,

@@ -24,7 +24,6 @@ servidor.on("connection", (conexao, requisicao) => {
     // Abaixo, toda vez que o servidor recebe uma mensagem
     // Ele ira chamar as funções que preciso passando a mensagem recebida, a conexao do usuario e a request que contem os dados como cookies
     conexao.onmessage = (msg) => {
-        console.log(`Nova mensagem recebida: ${msg}`);
         for (let funcaoHandler of handlers) {
             funcaoHandler(msg, conexao, requisicao)
         }
@@ -77,8 +76,19 @@ let iniciaAutenticar = (msg, conexao, requisicaoHeader) => {
         })
         criadorId++;
 
+        console.log("Autenticação aceita, adicionando usuario ao pool de jogadores");
         conexao.send(JSON.stringify({
             tipo: "aceita-autenticacao",
+            dados: {
+                jogador: {
+                    id: criadorId,
+                    nome: dados.nome
+                },
+                movimento: {
+                    movimentoPorPixels: 10,
+                    movimentoPorSegundo: 0.2
+                }
+            }
         }))
     }
 }
