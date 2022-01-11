@@ -12,7 +12,7 @@ import Notificacao from "./notificacao.js"
 
 // Variaveis
 var conexaoServidor = new Conexao(conexaoWS);
-var arenaJogo = new Arena()
+var arenaJogo = new Arena(conexaoServidor)
 
 // Criar o jogador atual e coloca-lo no game
 async function entrarNoJogo(nome) {
@@ -69,7 +69,18 @@ async function entrarNoJogo(nome) {
 
                 // Receber a lista de outros jogadores
                 conexaoServidor.addHandler(async (mensagem) => {
-                    let msgData = mensagem.data
+                    let msgData = JSON.parse(mensagem.data)
+                    if (msgData.tipo != "solicitar-jogadores") return;
+
+                    console.log("Lista de jogadores recebida!");
+                    
+                    let listaJogadores = msgData.dados.jogadores
+
+                    for (let jogador of listaJogadores) {
+                        if (jogador.id == arenaJogo.jogadorLocal.id) continue;
+
+                        arenaJogo.criarJogadorCliente(jogador)
+                    }
                 })
 
                 conexaoServidor.enviarMsg(JSON.stringify({

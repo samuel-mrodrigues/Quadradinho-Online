@@ -1,4 +1,9 @@
 class Movimento {
+
+    // Listeners pra eu poder customizar o que fazer quando o jogador se move
+    jogadorMoveu = (direcao) => { }
+    jogadorParou = (direcao) => { }
+
     // Total de pixels por movimento
     movimentoPorPixels = 5;
 
@@ -17,10 +22,22 @@ class Movimento {
     // As direcoes que estao atualmente ativas
     // Se cima, direita, etc.. estiver true(1), ele estará se movendo naquela direção, caso contrario false(0)
     movimentos = {
-        cima: 0,
-        direita: 0,
-        baixo: 0,
-        esquerda: 0
+        cima: {
+            taskId: 0,
+            movendo: 0
+        },
+        direita: {
+            taskId: 0,
+            movendo: 0
+        },
+        baixo: {
+            taskId: 0,
+            movendo: 0
+        },
+        esquerda: {
+            taskId: 0,
+            movendo: 0
+        }
     }
 
     constructor({ arenaHTML, jogadorHTML, movimentoPorPixels, movimentoPorSegundo }) {
@@ -41,13 +58,17 @@ class Movimento {
             return;
         }
         // Verifica se ja nao esta se movendo pra essa direção
-        if (this.movimentos[direcao] != 0) {
+        if (this.movimentos[direcao].movendo != 0) {
             return;
         }
 
-        // ID que será gerado para uso futuro
+        // ID que será gerado para uso futuro 
         let movimentoId = 0;
 
+        // Defino que o jogador esta se movendo na direcao especificada
+        this.movimentos[direcao].movendo = 1
+
+        this.jogadorMoveu(direcao)
         switch (direcao) {
             case "cima":
                 movimentoId = setInterval(() => {
@@ -61,7 +82,7 @@ class Movimento {
                     this.jogadorHTML.style.top = `${novaPos}px`
                 }, this.movimentosPorSegundo * 1000)
 
-                this.movimentos.cima = movimentoId
+                this.movimentos.cima.taskId = movimentoId
                 break;
             case "direita":
                 movimentoId = setInterval(() => {
@@ -76,7 +97,7 @@ class Movimento {
                     this.jogadorHTML.style.left = `${novaPos}px`
                 }, this.movimentosPorSegundo * 1000)
 
-                this.movimentos.direita = movimentoId
+                this.movimentos.direita.taskId = movimentoId
                 break;
             case "baixo":
                 movimentoId = setInterval(() => {
@@ -91,7 +112,7 @@ class Movimento {
                     this.jogadorHTML.style.top = `${novaPos}px`
                 }, this.movimentosPorSegundo * 1000)
 
-                this.movimentos.baixo = movimentoId
+                this.movimentos.baixo.taskId = movimentoId
                 break;
             case "esquerda":
                 movimentoId = setInterval(() => {
@@ -105,16 +126,19 @@ class Movimento {
                     this.jogadorHTML.style.left = `${novaPos}px`
                 }, this.movimentosPorSegundo * 1000)
 
-                this.movimentos.esquerda = movimentoId
+                this.movimentos.esquerda.taskId = movimentoId
                 break;
         }
     }
 
     // Para a task do movimento
     pararMovimento(direcao) {
-        if (this.movimentos[direcao] != 0) {
-            clearInterval(this.movimentos[direcao])
-            this.movimentos[direcao] = 0
+        if (this.movimentos[direcao].movendo != 0) {
+            clearInterval(this.movimentos[direcao].taskId)
+
+            this.movimentos[direcao].taskId = 0;
+            this.movimentos[direcao].movendo = 0
+            this.jogadorParou(direcao)
         }
     }
 

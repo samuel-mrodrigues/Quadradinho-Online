@@ -1,10 +1,10 @@
 import { Movimento } from "./Movimento.js";
 
 class MovimentoLocal extends Movimento {
-
     constructor(movimentoDados) {
         console.log("Montando as propriedades do movimento...");
         super(movimentoDados)
+
         this.ativarListenersTeclado()
     }
 
@@ -33,7 +33,7 @@ class MovimentoLocal extends Movimento {
             }
         }
 
-        // Mover quando o usuario dar algum input
+        // Parar quando o usuario parar de pressionar o botão
         window.onkeyup = (eventoTecla) => {
             let tecla = eventoTecla.key.toLowerCase();
 
@@ -43,6 +43,7 @@ class MovimentoLocal extends Movimento {
                     break;
                 case "arrowright": case "d":
                     this.pararMovimento("direita")
+
                     break;
                 case "arrowdown": case "s":
                     this.pararMovimento("baixo")

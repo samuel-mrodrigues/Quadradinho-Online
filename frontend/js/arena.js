@@ -1,7 +1,8 @@
+import { JogadorCliente } from "./jogador/JogadorCliente.js";
 import { JogadorLocal } from "./Jogador/JogadorLocal.js";
-import { JogadorCliente } from "./Jogador/JogadorCliente.js";
 
-import {MovimentoLocal} from "./jogador/Movimento/MovimentoLocal.js"
+import { MovimentoCliente } from "./jogador/Movimento/MovimentoCliente.js";
+import { MovimentoLocal } from "./jogador/Movimento/MovimentoLocal.js"
 
 class Arena {
     // O elemeto da arena
@@ -13,8 +14,12 @@ class Arena {
     // A classe dos outros jogadores
     outrosJogadores = []
 
-    constructor() {
+    // A classe que contem a conexao com o server
+    conexaoServidor;
+
+    constructor(servidor) {
         this.arenaHTML = document.getElementById("arena")
+        this.conexaoServidor = servidor;
     }
 
     getArena() {
@@ -30,8 +35,8 @@ class Arena {
         let nome = dados.jogador.nome
         let id = dados.jogador.id
 
-        let movimentoPorPixels = dados.movimento.movimentoPorPixels
-        let movimentoPorSegundo = dados.movimento.movimentoPorSegundo
+        let movimentoPorPixels = dados.propriedadesMovimento.movimentoPorPixels
+        let movimentoPorSegundo = dados.propriedadesMovimento.movimentoPorSegundo
 
         // Elemento HTML do jogador
         let jogadorElemento = document.createElement('div')
@@ -46,15 +51,53 @@ class Arena {
         })
 
         // Instancio o jogador com os dados
-         this.jogadorLocal = new JogadorLocal({
-             id: id,
-             nome: nome,
-             html: jogadorElemento,
-             movimento: listenerMovimento
-         })
+        this.jogadorLocal = new JogadorLocal({
+            id: id,
+            nome: nome,
+            html: jogadorElemento,
+            movimento: listenerMovimento
+        }, this.conexaoServidor)
 
         // Insere no html
         this.arenaHTML.appendChild(jogadorElemento)
+    }
+
+    // Cria um jogador cliente e insere no HTML
+    criarJogadorCliente(jogador) {
+        console.log("Criando jogador cliente com os dados ->");
+        console.log(jogador);
+
+        // Dados recebidos do servidor
+        let nome = jogador.nome
+        let id = jogador.id
+
+        let movimentoPorPixels = jogador.propriedadesMovimento.movimentoPorPixels
+        let movimentoPorSegundo = jogador.propriedadesMovimento.movimentoPorSegundo
+
+        // Elemento HTML do jogador
+        let jogadorClienteElemento = document.createElement('div')
+        jogadorClienteElemento.setAttribute('id', `jogadorCliente${id}`)
+
+        // Listener pra saber quando esse jogador se movimenta
+        let listenerMovimento = new MovimentoCliente({
+            arenaHTML: this.arenaHTML,
+            jogadorHTML: jogadorClienteElemento,
+            movimentoPorPixels: movimentoPorPixels,
+            movimentoPorSegundo: movimentoPorSegundo
+        })
+
+        // Instancio o jogador com os dados
+        let jogadorCliente = new JogadorCliente({
+            id: id,
+            nome: nome,
+            html: jogadorClienteElemento,
+            movimento: listenerMovimento
+        }, this.conexaoServidor)
+
+        this.outrosJogadores.push(jogadorCliente)
+
+        // Insere no html
+        this.arenaHTML.appendChild(jogadorClienteElemento)
     }
 
     mostrarArena() {

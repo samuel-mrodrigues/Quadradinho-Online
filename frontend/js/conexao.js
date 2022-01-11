@@ -26,8 +26,6 @@ class Conexao {
             }
 
             conexaoServidor.onmessage = (novaMsg) => {
-                this.log("Nova mensagem, passando para os listeners")
-                console.log(novaMsg)
 
                 for (let handlerFuncao of this.funcoesHandlers) {
                     handlerFuncao(novaMsg)
@@ -61,6 +59,8 @@ class Conexao {
 
     // Adiciona esse listener na lista de funções a chamar
     addHandler(novaFuncao) {
+        console.log("Adicionando uma nova função handler a conexão!");
+        console.log(novaFuncao);
         this.funcoesHandlers.push(novaFuncao)
     }
 }
