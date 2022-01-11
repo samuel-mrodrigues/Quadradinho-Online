@@ -20,25 +20,24 @@ class JogadorCliente extends Jogador {
             if (msgData.tipo != "notificar-movimento") return;
             console.log(msgData);
 
+            let jogadorDados = msgData.dados.quemMoveu;
+            console.log("Quem moveu:");
+            console.log(jogadorDados);
             console.log("Quem ta recebendo:");
             console.log(this.id, this.nome);
 
-            // let jogadorDados = msgData.dados.quemMoveu;
-            // if (jogadorDados.id == this.id) {
+            if (jogadorDados.id == this.id) {
+                let estaMovendo = jogadorDados.movendo;
+                let direcao = jogadorDados.direcao;
 
-            //     let estaMovendo = jogadorDados.movendo;
-            //     let direcao = jogadorDados.direcao;
+                console.log(`Preciso mover o player id ${this.id} na direcao ${direcao}!`);
 
-            //     // Movendo = 1 Esta se movendo
-            //     // Movendo = 0 Parou de mover
-            //     if (estaMovendo == 1) {
-            //         this.movimentoManager.moverJogador(direcao)
-            //     } else {
-            //         this.movimentoManager.pararMovimento(direcao)
-            //     }
-            // } else {
-            //     console.log("ID NAO IGUAL");
-            // }
+                if (estaMovendo) {
+                    this.movimentoManager.moverJogador(direcao)
+                } else {
+                    this.movimentoManager.pararMovimento(direcao)
+                }
+            }
         })
     }
 

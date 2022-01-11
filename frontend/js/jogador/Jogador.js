@@ -7,8 +7,6 @@ class Jogador {
         this.nome = nome;
         this.id = id;
         this.jogadorHTML = jogadorHTML
-
-        console.log(`Jogador local: ${nome}`);
     }
 
     getNome() {

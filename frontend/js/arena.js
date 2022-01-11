@@ -67,9 +67,14 @@ class Arena {
         console.log("Criando jogador cliente com os dados ->");
         console.log(jogador);
 
+        let id = jogador.id
+        if (this.jogadorClienteJaCriado(id)) {
+            console.log(`Jogador com id ${id} ja esta criada, ignorando...`);
+            return;
+        }
+
         // Dados recebidos do servidor
         let nome = jogador.nome
-        let id = jogador.id
 
         let movimentoPorPixels = jogador.propriedadesMovimento.movimentoPorPixels
         let movimentoPorSegundo = jogador.propriedadesMovimento.movimentoPorSegundo
@@ -77,6 +82,7 @@ class Arena {
         // Elemento HTML do jogador
         let jogadorClienteElemento = document.createElement('div')
         jogadorClienteElemento.setAttribute('id', `jogadorCliente${id}`)
+        jogadorClienteElemento.classList.add("cliente")
 
         // Listener pra saber quando esse jogador se movimenta
         let listenerMovimento = new MovimentoCliente({
@@ -112,6 +118,14 @@ class Arena {
         setTimeout(() => {
             this.arenaHTML.style.display = 'none';
         }, 2000);
+    }
+
+    jogadorClienteJaCriado(id) {
+        for (let jogador of this.outrosJogadores) {
+            if (jogador.id == id) return true;
+        }
+
+        return false;
     }
 }
 export { Arena }

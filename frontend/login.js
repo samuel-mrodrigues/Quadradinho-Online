@@ -44,6 +44,7 @@ function mostrarLogin() {
 
 let taskIdCores
 function ativarEfeitosLoucos(boolean) {
+    return;
     if (boolean) {
         taskIdCores = setInterval(() => {
             loginElemento.style.fontSize = `${getNumeroAleatorio(3, 5)}rem`

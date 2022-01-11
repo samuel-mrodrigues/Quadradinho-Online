@@ -29,9 +29,21 @@ servidor.on("connection", (conexao, requisicao) => {
         }
     }
 
-    conexao.onclose = (teste) => {
+    conexao.onclose = (usuarioConexao) => {
+        console.log(conexao);
+        console.log("Usuario desconectado!");
+
+        if (usuarioConexao.jogadorID != undefined) {
+            console.log("O usuario deslogado estava autenticado! Removendo ele da pool");
+
+
+        }
     }
 })
+
+function removerJogadorPool(idJogador) {
+    
+}
 
 // O id abaixo aumenta cada vez que um novo user conecta
 let criadorId = 0;
@@ -68,6 +80,7 @@ let iniciaAutenticar = (msg, conexao, requisicaoHeader) => {
         movimentoPorSegundo: 0.2
     }
 
+    // Notifica o usuario que a autenticação foi aceita
     console.log("Autenticação aceita, adicionando usuario ao pool de jogadores");
     conexao.send(JSON.stringify({
         tipo: "aceita-autenticacao",
@@ -80,6 +93,7 @@ let iniciaAutenticar = (msg, conexao, requisicaoHeader) => {
         }
     }))
 
+    // Cria um objeto que será guardado para uso futuro
     let jogadorData = {
         id: criadorId,
         nome: dados.nome,
@@ -96,10 +110,34 @@ let iniciaAutenticar = (msg, conexao, requisicaoHeader) => {
         }
     }
 
+    // Eu atribuo uma variavel no objeto do WebSocket pra identificar o ID do jogador em outras situações
+    jogadorData.conexao.jogadorID = jogadorData.id
+
+    // Adiciona na pool de jogadores
     poolJogadores.push(jogadorData)
+
+    // Notifica os jogadores logados a atualizarem sua lista de jogadores
+    notificarJogadores("atualizar-jogadores", {})
+
     console.log(jogadorData);
 
+    // Aumenta o ID pro proximo jogador
     criadorId++;
+}
+
+// Manda uma mensagem para todos os jogadores
+// É possivel especificar quais ids devem ser ignorados passando um array no idsIgnorar contendo os ids. Ex: [1, 3]
+function notificarJogadores(tipo, dados, idsIgnorar = []) {
+    for (let jogador of poolJogadores) {
+        let jogadorId = jogador.id;
+
+        if (idsIgnorar.indexOf(jogadorId) != -1) return;
+
+        jogador.conexao.send(JSON.stringify({
+            tipo: tipo,
+            dados: dados
+        }))
+    }
 }
 
 // Envia a lista de jogadores para o jogador que autenticou

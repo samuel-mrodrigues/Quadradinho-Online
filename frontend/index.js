@@ -73,9 +73,9 @@ async function entrarNoJogo(nome) {
                     if (msgData.tipo != "solicitar-jogadores") return;
 
                     console.log("Lista de jogadores recebida!");
-                    
-                    let listaJogadores = msgData.dados.jogadores
 
+                    let listaJogadores = msgData.dados.jogadores
+                    
                     for (let jogador of listaJogadores) {
                         if (jogador.id == arenaJogo.jogadorLocal.id) continue;
 
@@ -83,9 +83,16 @@ async function entrarNoJogo(nome) {
                     }
                 })
 
-                conexaoServidor.enviarMsg(JSON.stringify({
-                    tipo: "solicitar-jogadores"
-                }))
+                // Listener pra quando o servidor mander esse usuario atualizar a lista de jogadores
+                conexaoServidor.addHandler((mensagem) => {
+                    let msgData = JSON.parse(mensagem.data)
+                    if (msgData.tipo != "atualizar-jogadores") return;
+
+                    console.log("Recebi notificação pra atualizar os jogadores!");
+                    conexaoServidor.enviarMsg(JSON.stringify({
+                        tipo: "solicitar-jogadores"
+                    }))
+                })
             }
         })
 
