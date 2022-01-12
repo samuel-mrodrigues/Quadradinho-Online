@@ -106,6 +106,42 @@ class Arena {
         this.arenaHTML.appendChild(jogadorClienteElemento)
     }
 
+    removeJogadorCliente(idJogador) {
+        console.log(`Removendo o jogador id ${idJogador}`);
+
+        // Objeto dados do jogador
+        let jogadorARemover = this.getJogadorCliente(idJogador)
+
+        console.log(jogadorARemover);
+        // Remove o jogador do HTML
+        jogadorARemover.getHTML().remove()
+
+        // Remove da lista de jogadores
+        this.removeJogadorClientePool(idJogador)
+    }
+
+    removeJogadorClientePool(idJogador) {
+        for (let index = 0; index < this.outrosJogadores.length; index++) {
+            let jogador = this.outrosJogadores[index]
+
+            if (jogador.id == idJogador) {
+                console.log(`Excluindo o id ${idJogador} da lista de jogadores`);
+                this.outrosJogadores.splice(index, 1)
+                break;
+            }
+        }
+    }
+
+    getJogadorCliente(jogadorId) {
+        for (let index = 0; index < this.outrosJogadores.length; index++) {
+            let jogador = this.outrosJogadores[index]
+
+            if (jogador.id == jogadorId) {
+                return jogador;
+            }
+        }
+    }
+
     mostrarArena() {
         this.arenaHTML.style.display = 'block';
         setTimeout(() => {

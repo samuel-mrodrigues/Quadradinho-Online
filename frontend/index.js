@@ -75,7 +75,7 @@ async function entrarNoJogo(nome) {
                     console.log("Lista de jogadores recebida!");
 
                     let listaJogadores = msgData.dados.jogadores
-                    
+
                     for (let jogador of listaJogadores) {
                         if (jogador.id == arenaJogo.jogadorLocal.id) continue;
 
@@ -92,6 +92,18 @@ async function entrarNoJogo(nome) {
                     conexaoServidor.enviarMsg(JSON.stringify({
                         tipo: "solicitar-jogadores"
                     }))
+                })
+
+                // Listener pra quando o servidor remover alguem da pool de jogadores
+                conexaoServidor.addHandler((mensagem) => {
+                    let msgData = JSON.parse(mensagem.data)
+                    if (msgData.tipo != "remover-jogador") return;
+
+                    console.log(`Solicitação para remover jogador`);
+                    console.log(msgData);
+                    let jogadorRemover = msgData.dados.jogador.id
+
+                    arenaJogo.removeJogadorCliente(jogadorRemover)
                 })
             }
         })

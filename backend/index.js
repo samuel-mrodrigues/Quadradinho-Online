@@ -29,20 +29,40 @@ servidor.on("connection", (conexao, requisicao) => {
         }
     }
 
-    conexao.onclose = (usuarioConexao) => {
-        console.log(conexao);
-        console.log("Usuario desconectado!");
+    // Usuario foi desconectado
+    conexao.onclose = (conexao) => {
+        let usuarioDesconectado = conexao.target
 
-        if (usuarioConexao.jogadorID != undefined) {
+        if (usuarioDesconectado.jogadorID != undefined) {
             console.log("O usuario deslogado estava autenticado! Removendo ele da pool");
+            let jogadorId = usuarioDesconectado.jogadorID
 
+            // Remove da pool de jogadores
+            removerJogadorPool(jogadorId)
+
+            // Notificar os jogadores para remover esse jogadorId
+            notificarJogadores("remover-jogador", {
+                jogador: {
+                    id: jogadorId
+                }
+            })
 
         }
     }
 })
 
 function removerJogadorPool(idJogador) {
-    
+    for (let index = 0; index < poolJogadores.length; index++) {
+        let jogador = poolJogadores[index]
+
+        if (jogador.id == idJogador) {
+            console.log(`Removendo usuario ${idJogador} da pool de jogadores`);
+            poolJogadores.splice(index, 1)
+            break;
+        }
+    }
+
+    console.log(`Total de jogadores na pool agora: ${poolJogadores.length}`);
 }
 
 // O id abaixo aumenta cada vez que um novo user conecta
