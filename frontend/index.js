@@ -1,6 +1,6 @@
 log(": D")
 // Parametros do game
-let conexaoWS = "localhost:8081"
+let conexaoWS = "192.168.0.105:8081"
 let taskIdCorDeFundo = 0;
 
 // Imports
@@ -81,6 +81,11 @@ async function entrarNoJogo(nome) {
 
                         arenaJogo.criarJogadorCliente(jogador)
                     }
+
+                    // Notificar o servidor que eu quero receber as posições dos jogadores
+                    conexaoServidor.enviarMsg(JSON.stringify({
+                        tipo: "atualizar-jogadores-posicoes"
+                    }))
                 })
 
                 // Listener pra quando o servidor mander esse usuario atualizar a lista de jogadores
@@ -92,6 +97,25 @@ async function entrarNoJogo(nome) {
                     conexaoServidor.enviarMsg(JSON.stringify({
                         tipo: "solicitar-jogadores"
                     }))
+                })
+
+                // Listener para receber as posições atuais dos jogadores
+                conexaoServidor.addHandler((mensagem) => {
+                    let msgData = JSON.parse(mensagem.data)
+                    if (msgData.tipo != "atualizar-jogadores-posicoes") return;
+
+                    console.log("Atualizando posições dos jogadores");
+
+                    for (let posicoes of msgData.dados.jogadores) {
+                        arenaJogo.atualizarPosicaoJogadorCliente({
+                            idJogador: posicoes.jogador.id,
+                            posicao: {
+                                X: posicoes.jogador.posicao.X,
+                                Y: posicoes.jogador.posicao.Y
+                            }
+                        })
+                    }
+
                 })
 
                 // Listener pra quando o servidor remover alguem da pool de jogadores

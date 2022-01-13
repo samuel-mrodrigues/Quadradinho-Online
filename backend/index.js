@@ -4,7 +4,7 @@ import { WebSocket, WebSocketServer } from "ws";
 
 const servidor = new WebSocketServer({
     port: 8081,
-    host: "localhost"
+    host: "192.168.0.105"
 })
 
 servidor.on("listening", () => {
@@ -126,6 +126,10 @@ let iniciaAutenticar = (msg, conexao, requisicaoHeader) => {
                 direita: 0,
                 baixo: 0,
                 esquerda: 0
+            },
+            posicaoAtual: {
+                X: 0,
+                Y: 0
             }
         }
     }
@@ -143,21 +147,6 @@ let iniciaAutenticar = (msg, conexao, requisicaoHeader) => {
 
     // Aumenta o ID pro proximo jogador
     criadorId++;
-}
-
-// Manda uma mensagem para todos os jogadores
-// É possivel especificar quais ids devem ser ignorados passando um array no idsIgnorar contendo os ids. Ex: [1, 3]
-function notificarJogadores(tipo, dados, idsIgnorar = []) {
-    for (let jogador of poolJogadores) {
-        let jogadorId = jogador.id;
-
-        if (idsIgnorar.indexOf(jogadorId) != -1) return;
-
-        jogador.conexao.send(JSON.stringify({
-            tipo: tipo,
-            dados: dados
-        }))
-    }
 }
 
 // Envia a lista de jogadores para o jogador que autenticou
@@ -204,6 +193,9 @@ let jogadorMoveu = (msg, conexao, requisicaoHeader) => {
 
     // Atualiza o objeto do jogador que moveu
     alterarMovimento(jogadorDados.id, jogadorDados.direcao, jogadorDados.movendo);
+    
+    // Atualizar a posição X e Y do jogador no servidor
+    atualizarPosicaoJogador(jogadorDados.id, jogadorDados.posicao)
 
     for (let jogador of poolJogadores) {
         jogador.conexao.send(JSON.stringify({
@@ -219,6 +211,61 @@ let jogadorMoveu = (msg, conexao, requisicaoHeader) => {
     }
 }
 
+// Envia a lista das posições atuais para quem solicitar
+let atualizarJogadoresPosicoes = (msg, conexao, requisicaoHeader) => {
+    let msgData = JSON.parse(msg.data)
+
+    // Verifica se a mensagem recebida do cliente é pra autenticar
+    if (msgData.tipo != "atualizar-jogadores-posicoes") return;
+    console.log("Nova solicitação de atualizar posições de jogadores");
+
+    let jogadorIDSolicitante = conexao.jogadorID
+
+    let listaJogadoresPosicoes = []
+    for (let jogador of poolJogadores) {
+        if (jogador.id == jogadorIDSolicitante) continue;
+
+        let posX = jogador.jogo.posicaoAtual.X
+        let posY = jogador.jogo.posicaoAtual.Y
+
+        let objetoDados = {
+            jogador: {
+                id: jogador.id,
+                posicao: {
+                    X: posX,
+                    Y: posY
+                }
+            }
+        }
+
+        listaJogadoresPosicoes.push(objetoDados)
+    }
+
+    notificarJogadores("atualizar-jogadores-posicoes", { jogadores: listaJogadoresPosicoes }, [], [jogadorIDSolicitante])
+}
+
+// Manda uma mensagem para todos os jogadores
+// É possivel especificar quais ids devem ser ignorados passando um array no idsIgnorar contendo os ids. Ex: [1, 3]
+function notificarJogadores(tipo, dados, idsIgnorar = [], idsEspecificos = []) {
+    for (let jogador of poolJogadores) {
+        let jogadorId = jogador.id;
+
+        if (idsIgnorar.indexOf(jogadorId) != -1) continue;;
+        if (idsEspecificos.length != 0 && idsEspecificos.indexOf(jogadorId) == -1) continue;
+
+        jogador.conexao.send(JSON.stringify({
+            tipo: tipo,
+            dados: dados
+        }))
+
+        // Se achou o jogador pra enviar a msg, só ignora o resto
+        if (idsEspecificos.length != 0) {
+            break;
+        }
+    }
+}
+
+
 // Altera o objeto do jogador se ele estiver movendo ou não
 // É importante para que o servidor saiba o status atual de cada jogador
 function alterarMovimento(idJogador, direcao, movendoOuNao) {
@@ -231,7 +278,19 @@ function alterarMovimento(idJogador, direcao, movendoOuNao) {
     }
 }
 
+function atualizarPosicaoJogador(idJogador, posicoes) {
+    for (let jogador of poolJogadores) {
+        if (jogador.id == idJogador) {
+            console.log(`Alterando posições do jogador id ${idJogador}`);
+            jogador.jogo.posicaoAtual.X = posicoes.X;
+            jogador.jogo.posicaoAtual.Y = posicoes.Y;
+            break;
+        }
+    }
+}
+
 // Adiciona alguma função pra ser executada quando uma mensagem chegar
 handlers.push(iniciaAutenticar)
 handlers.push(solicitarJogadores)
 handlers.push(jogadorMoveu)
+handlers.push(atualizarJogadoresPosicoes)

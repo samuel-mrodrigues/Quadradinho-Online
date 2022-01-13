@@ -26,7 +26,11 @@ class JogadorLocal extends Jogador {
                     jogador: {
                         id: this.id,
                         direcao: direcao,
-                        movendo: 1
+                        movendo: 1,
+                        posicao: {
+                            X: this.jogadorHTML.offsetLeft,
+                            Y: this.jogadorHTML.offsetTop
+                        }
                     }
                 }
             }))
@@ -41,7 +45,11 @@ class JogadorLocal extends Jogador {
                     jogador: {
                         id: this.id,
                         direcao: direcao,
-                        movendo: 0
+                        movendo: 0,
+                        posicao: {
+                            X: this.jogadorHTML.offsetLeft,
+                            Y: this.jogadorHTML.offsetTop
+                        }
                     }
                 }
             }))

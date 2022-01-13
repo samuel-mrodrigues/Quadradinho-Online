@@ -153,5 +153,13 @@ class Movimento {
             this.jogadorHTML.style.left = '0px'
         }
     }
+
+    setX(novoX) {
+        this.jogadorHTML.style.left = `${novoX}px`
+    }
+
+    setY(novoY) {
+        this.jogadorHTML.style.top = `${novoY}px`
+    }
 }
 export { Movimento }

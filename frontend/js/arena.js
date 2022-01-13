@@ -132,6 +132,19 @@ class Arena {
         }
     }
 
+    atualizarPosicaoJogadorCliente(dados = { idJogador, posicao: { X, Y } }) {
+        console.log(`Atualizando jogador ${dados.idJogador}`);
+
+        let jogadorCliente = this.getJogadorCliente(dados.idJogador);
+        console.log(dados);
+
+        if (jogadorCliente == undefined) return;
+
+        console.log(jogadorCliente);
+        jogadorCliente.movimentoManager.setX(dados.posicao.X)
+        jogadorCliente.movimentoManager.setY(dados.posicao.Y)
+    }
+
     getJogadorCliente(jogadorId) {
         for (let index = 0; index < this.outrosJogadores.length; index++) {
             let jogador = this.outrosJogadores[index]
