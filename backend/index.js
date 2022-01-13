@@ -3,8 +3,7 @@ console.log("Iniciando backend..");
 import { WebSocket, WebSocketServer } from "ws";
 
 const servidor = new WebSocketServer({
-    port: 8081,
-    host: "192.168.0.105"
+    port: 8081
 })
 
 servidor.on("listening", () => {
